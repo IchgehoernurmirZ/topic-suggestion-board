@@ -20,9 +20,16 @@ export default function PostForm() {
   const [content, setContent] = useState('')
   const [willPresent, setWillPresent] = useState(false)
   const [presentDuration, setPresentDuration] = useState(5)
+  const [durationError, setDurationError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+
+  function validateDuration(value) {
+    const n = Number(value)
+    if (!Number.isInteger(n) || n < 1 || n > 15) return '时长请在 1-20 分钟之间'
+    return ''
+  }
 
   function handleWillPresentChange(e) {
     setWillPresent(e.target.checked)
@@ -50,6 +57,14 @@ export default function PostForm() {
     if (nickErr) {
       setNicknameError(nickErr)
       return
+    }
+
+    if (willPresent) {
+      const durErr = validateDuration(presentDuration)
+      if (durErr) {
+        setDurationError(durErr)
+        return
+      }
     }
 
     if (!window.confirm('确认提交这个话题吗？')) return
@@ -85,6 +100,7 @@ export default function PostForm() {
       setNickname('')
       setWillPresent(false)
       setPresentDuration(5)
+      setDurationError('')
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
     } catch (err) {
@@ -165,11 +181,15 @@ export default function PostForm() {
             id="presentDuration"
             type="number"
             value={presentDuration}
-            onChange={(e) => setPresentDuration(e.target.value)}
+            onChange={(e) => {
+              setPresentDuration(e.target.value)
+              setDurationError(validateDuration(e.target.value))
+            }}
             min={1}
-            max={60}
+            max={15}
             disabled={submitting}
           />
+          {durationError && <span className="post-form__field-error">{durationError}</span>}
         </div>
       )}
 
