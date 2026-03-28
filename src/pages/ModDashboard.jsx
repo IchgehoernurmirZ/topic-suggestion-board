@@ -7,6 +7,7 @@ import ThemeToggle from '../components/ThemeToggle'
 
 export default function ModDashboard() {
   const user = useAuth()
+  const { posts: selected, loading: selectedLoading } = usePosts('selected')
   const { posts, loading, error } = usePosts('active')
   const { posts: archived, loading: archivedLoading } = usePosts('archived')
 
@@ -28,6 +29,17 @@ export default function ModDashboard() {
           </button>
         </div>
       </header>
+
+      {!selectedLoading && selected.length > 0 && (
+        <section className="feed feed--selected">
+          <h2 className="feed__title">🎉 本期话题 · {selected.length}</h2>
+          <div className="post-grid">
+            {selected.map((post) => (
+              <PostCard key={post.id} post={post} isModerator />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="feed">
         <h2 className="feed__title">🔥 当前话题 {!loading && `· ${posts.length}`}</h2>

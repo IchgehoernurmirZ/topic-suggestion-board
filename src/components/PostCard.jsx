@@ -11,6 +11,7 @@ export default function PostCard({ post, isModerator }) {
   const [voting, setVoting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [archiving, setArchiving] = useState(false)
+  const [selecting, setSelecting] = useState(false)
   const [actionError, setActionError] = useState('')
 
   const sessionId = getSessionId()
@@ -36,6 +37,37 @@ export default function PostCard({ post, isModerator }) {
       console.error('upvote failed', err)
     } finally {
       setVoting(false)
+    }
+  }
+
+  async function handleSelect() {
+    if (!window.confirm('确认选入本期吗？')) return
+    setSelecting(true)
+    setActionError('')
+    try {
+      await updateDoc(doc(db, 'posts', id), {
+        status: 'selected',
+        selectedAt: serverTimestamp(),
+      })
+    } catch (err) {
+      console.error('select failed', err)
+      setActionError('操作失败，请检查权限')
+      setSelecting(false)
+    }
+  }
+
+  async function handleUnselect() {
+    if (!window.confirm('取消选中吗？')) return
+    setSelecting(true)
+    setActionError('')
+    try {
+      await updateDoc(doc(db, 'posts', id), {
+        status: 'active',
+      })
+    } catch (err) {
+      console.error('unselect failed', err)
+      setActionError('操作失败，请检查权限')
+      setSelecting(false)
     }
   }
 
@@ -81,6 +113,10 @@ export default function PostCard({ post, isModerator }) {
         </button>
       )}
 
+      {post.status === 'selected' && (
+        <span className="post-card__selected-badge">🎉 本期话题</span>
+      )}
+
       {post.willPresent && (
         <span className="post-card__presenter-badge">
           🙋‍♀️ 有人愿意分享 · 约{post.presentDuration}分钟
@@ -94,6 +130,26 @@ export default function PostCard({ post, isModerator }) {
           {nickname} · {date ?? '…'}
         </span>
         <div className="post-card__actions">
+          {isModerator && post.status === 'active' && (
+            <button
+              className="post-card__select-btn"
+              onClick={handleSelect}
+              disabled={selecting}
+              aria-label="选入本期"
+            >
+              {selecting ? '…' : '选入本期'}
+            </button>
+          )}
+          {isModerator && post.status === 'selected' && (
+            <button
+              className="post-card__unselect-btn"
+              onClick={handleUnselect}
+              disabled={selecting}
+              aria-label="取消选中"
+            >
+              {selecting ? '…' : '取消选中'}
+            </button>
+          )}
           {isModerator && post.status === 'active' && (
             <button
               className="post-card__archive-btn"

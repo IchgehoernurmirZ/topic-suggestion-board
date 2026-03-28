@@ -8,8 +8,10 @@ export function usePosts(status = 'active') {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const sortField = status === 'active' ? 'upvotes' : 'archivedAt'
-    const sortDir = status === 'active' ? 'desc' : 'desc'
+    const sortField = status === 'active' ? 'upvotes'
+      : status === 'selected' ? 'selectedAt'
+      : 'archivedAt'
+    const sortDir = 'desc'
 
     const q = query(
       collection(db, 'posts'),

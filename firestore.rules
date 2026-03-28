@@ -40,6 +40,17 @@ service cloud.firestore {
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'archivedAt'])
         && request.resource.data.status == 'archived';
 
+      // Moderator can select a post for the current session
+      allow update: if isModerator()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'selectedAt'])
+        && request.resource.data.status == 'selected';
+
+      // Moderator can unselect a post (revert selected → active)
+      allow update: if isModerator()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status == 'active'
+        && resource.data.status == 'selected';
+
       // No hard deletes
       allow delete: if false;
     }

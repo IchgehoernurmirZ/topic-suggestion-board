@@ -6,6 +6,7 @@ import { usePosts } from '../hooks/usePosts'
 
 export default function Home() {
   const [showForm, setShowForm] = useState(true)
+  const { posts: selected, loading: selectedLoading } = usePosts('selected')
   const { posts, loading, error } = usePosts('active')
   const { posts: archived, loading: archivedLoading } = usePosts('archived')
 
@@ -18,6 +19,17 @@ export default function Home() {
         </div>
         <ThemeToggle />
       </header>
+
+      {!selectedLoading && selected.length > 0 && (
+        <section className="feed feed--selected">
+          <h2 className="feed__title">🎉 本期话题 · {selected.length}</h2>
+          <div className="post-grid">
+            {selected.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {showForm
         ? <PostForm onSuccess={() => setShowForm(false)} />
