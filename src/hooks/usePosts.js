@@ -2,16 +2,19 @@ import { useState, useEffect } from 'react'
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 
-export function usePosts() {
+export function usePosts(status = 'active') {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    const sortField = status === 'active' ? 'upvotes' : 'archivedAt'
+    const sortDir = status === 'active' ? 'desc' : 'desc'
+
     const q = query(
       collection(db, 'posts'),
-      where('status', '==', 'active'),
-      orderBy('upvotes', 'desc'),
+      where('status', '==', status),
+      orderBy(sortField, sortDir),
     )
 
     const unsubscribe = onSnapshot(
@@ -28,7 +31,7 @@ export function usePosts() {
     )
 
     return unsubscribe
-  }, [])
+  }, [status])
 
   return { posts, loading, error }
 }

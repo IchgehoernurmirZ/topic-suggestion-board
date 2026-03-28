@@ -6,7 +6,8 @@ import PostCard from '../components/PostCard'
 
 export default function ModDashboard() {
   const user = useAuth()
-  const { posts, loading, error } = usePosts()
+  const { posts, loading, error } = usePosts('active')
+  const { posts: archived, loading: archivedLoading } = usePosts('archived')
 
   async function handleSignOut() {
     await signOut(auth)
@@ -39,6 +40,17 @@ export default function ModDashboard() {
           ))}
         </div>
       </section>
+
+      {!archivedLoading && archived.length > 0 && (
+        <section className="feed feed--archived">
+          <h2 className="feed__title">往期话题 · {archived.length}</h2>
+          <div className="post-grid">
+            {archived.map((post) => (
+              <PostCard key={post.id} post={post} isModerator />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }

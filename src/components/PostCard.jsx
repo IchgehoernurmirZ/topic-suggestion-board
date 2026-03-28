@@ -10,6 +10,7 @@ export default function PostCard({ post, isModerator }) {
   const [expanded, setExpanded] = useState(false)
   const [voting, setVoting] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [archiving, setArchiving] = useState(false)
 
   const sessionId = getSessionId()
   const hasVoted = upvotedBy?.includes(sessionId)
@@ -34,6 +35,20 @@ export default function PostCard({ post, isModerator }) {
       console.error('upvote failed', err)
     } finally {
       setVoting(false)
+    }
+  }
+
+  async function handleArchive() {
+    if (!window.confirm('将此话题标记为"已选入本期"吗？')) return
+    setArchiving(true)
+    try {
+      await updateDoc(doc(db, 'posts', id), {
+        status: 'archived',
+        archivedAt: serverTimestamp(),
+      })
+    } catch (err) {
+      console.error('archive failed', err)
+      setArchiving(false)
     }
   }
 
@@ -66,6 +81,16 @@ export default function PostCard({ post, isModerator }) {
           {nickname} · {date ?? '…'}
         </span>
         <div className="post-card__actions">
+          {isModerator && post.status === 'active' && (
+            <button
+              className="post-card__archive-btn"
+              onClick={handleArchive}
+              disabled={archiving}
+              aria-label="标记为已选入本期"
+            >
+              {archiving ? '…' : '已选入本期'}
+            </button>
+          )}
           {isModerator && (
             <button
               className="post-card__delete-btn"
@@ -76,14 +101,16 @@ export default function PostCard({ post, isModerator }) {
               {deleting ? '…' : '删除'}
             </button>
           )}
-          <button
-            className={`post-card__upvote-btn ${hasVoted ? 'post-card__upvote-btn--voted' : ''}`}
-            onClick={handleUpvote}
-            disabled={voting}
-            aria-label="upvote"
-          >
-            ▲ {upvotes}
-          </button>
+          {post.status === 'active' && (
+            <button
+              className={`post-card__upvote-btn ${hasVoted ? 'post-card__upvote-btn--voted' : ''}`}
+              onClick={handleUpvote}
+              disabled={voting}
+              aria-label="upvote"
+            >
+              ▲ {upvotes}
+            </button>
+          )}
         </div>
       </footer>
     </article>

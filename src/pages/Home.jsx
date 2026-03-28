@@ -3,7 +3,8 @@ import PostCard from '../components/PostCard'
 import { usePosts } from '../hooks/usePosts'
 
 export default function Home() {
-  const { posts, loading, error } = usePosts()
+  const { posts, loading, error } = usePosts('active')
+  const { posts: archived, loading: archivedLoading } = usePosts('archived')
 
   return (
     <main>
@@ -29,6 +30,17 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {!archivedLoading && archived.length > 0 && (
+        <section className="feed feed--archived">
+          <h2 className="feed__title">往期话题 · {archived.length}</h2>
+          <div className="post-grid">
+            {archived.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }
