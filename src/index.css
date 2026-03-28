@@ -272,10 +272,43 @@ body {
   color: var(--error);
 }
 
+.post-form__field-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
 .post-form__field-error {
   font-size: 0.8rem;
   color: var(--error);
   margin-top: 4px;
+}
+
+.post-form__checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.post-form__checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.post-form__checkbox-row label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.post-form__field--duration input {
+  max-width: 100px;
 }
 
 .post-form__error {
@@ -382,6 +415,18 @@ body {
 
 .post-card__upvote-btn:disabled {
   opacity: 1;
+}
+
+.post-card__presenter-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--primary);
+  align-self: flex-start;
 }
 
 .post-card__action-error {

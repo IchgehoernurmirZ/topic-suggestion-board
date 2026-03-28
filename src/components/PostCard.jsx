@@ -81,6 +81,12 @@ export default function PostCard({ post, isModerator }) {
         </button>
       )}
 
+      {post.willPresent && (
+        <span className="post-card__presenter-badge">
+          🙋‍♀️ 有人愿意分享 · 约{post.presentDuration}分钟
+        </span>
+      )}
+
       {actionError && <p className="post-card__action-error">{actionError}</p>}
 
       <footer className="post-card__footer">
