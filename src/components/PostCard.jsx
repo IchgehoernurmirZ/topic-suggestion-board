@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { doc, updateDoc, increment, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { doc, updateDoc, increment, arrayUnion, arrayRemove, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { getSessionId } from '../lib/session'
 
 const TRUNCATE_AT = 150
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, isModerator }) {
   const { id, nickname, content, upvotes, upvotedBy, createdAt } = post
   const [expanded, setExpanded] = useState(false)
   const [voting, setVoting] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const sessionId = getSessionId()
   const hasVoted = upvotedBy?.includes(sessionId)
@@ -36,6 +37,20 @@ export default function PostCard({ post }) {
     }
   }
 
+  async function handleDelete() {
+    if (!window.confirm('确认删除这个话题吗？')) return
+    setDeleting(true)
+    try {
+      await updateDoc(doc(db, 'posts', id), {
+        status: 'deleted',
+        deletedAt: serverTimestamp(),
+      })
+    } catch (err) {
+      console.error('delete failed', err)
+      setDeleting(false)
+    }
+  }
+
   return (
     <article className="post-card">
       <p className="post-card__content">{displayContent}</p>
@@ -50,14 +65,26 @@ export default function PostCard({ post }) {
         <span className="post-card__meta">
           {nickname} · {date ?? '…'}
         </span>
-        <button
-          className={`post-card__upvote-btn ${hasVoted ? 'post-card__upvote-btn--voted' : ''}`}
-          onClick={handleUpvote}
-          disabled={voting}
-          aria-label="upvote"
-        >
-          ▲ {upvotes}
-        </button>
+        <div className="post-card__actions">
+          {isModerator && (
+            <button
+              className="post-card__delete-btn"
+              onClick={handleDelete}
+              disabled={deleting}
+              aria-label="删除"
+            >
+              {deleting ? '…' : '删除'}
+            </button>
+          )}
+          <button
+            className={`post-card__upvote-btn ${hasVoted ? 'post-card__upvote-btn--voted' : ''}`}
+            onClick={handleUpvote}
+            disabled={voting}
+            aria-label="upvote"
+          >
+            ▲ {upvotes}
+          </button>
+        </div>
       </footer>
     </article>
   )

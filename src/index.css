@@ -255,6 +255,33 @@ body {
   opacity: 1;
 }
 
+.post-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.post-card__delete-btn {
+  background: none;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #ef4444;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.post-card__delete-btn:not(:disabled):hover {
+  background: #fef2f2;
+}
+
+.post-card__delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .post-card__toggle {
   background: none;
   border: none;
