@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { doc, updateDoc, increment, arrayUnion } from 'firebase/firestore'
+import { doc, updateDoc, increment, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { getSessionId } from '../lib/session'
 
@@ -22,12 +22,12 @@ export default function PostCard({ post }) {
   })
 
   async function handleUpvote() {
-    if (hasVoted || voting) return
+    if (voting) return
     setVoting(true)
     try {
       await updateDoc(doc(db, 'posts', id), {
-        upvotes: increment(1),
-        upvotedBy: arrayUnion(sessionId),
+        upvotes: increment(hasVoted ? -1 : 1),
+        upvotedBy: hasVoted ? arrayRemove(sessionId) : arrayUnion(sessionId),
       })
     } catch (err) {
       console.error('upvote failed', err)
@@ -53,7 +53,7 @@ export default function PostCard({ post }) {
         <button
           className={`post-card__upvote-btn ${hasVoted ? 'post-card__upvote-btn--voted' : ''}`}
           onClick={handleUpvote}
-          disabled={hasVoted || voting}
+          disabled={voting}
           aria-label="upvote"
         >
           ▲ {upvotes}

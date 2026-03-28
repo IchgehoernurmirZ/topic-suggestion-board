@@ -22,10 +22,11 @@ service cloud.firestore {
         && request.resource.data.upvotedBy == []
         && request.resource.data.status == 'active';
 
-      // Anyone can upvote (only upvotes and upvotedBy fields may change)
+      // Anyone can upvote or un-upvote (only upvotes and upvotedBy fields may change)
       allow update: if !isModerator()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvotes', 'upvotedBy'])
-        && request.resource.data.upvotes == resource.data.upvotes + 1;
+        && (request.resource.data.upvotes == resource.data.upvotes + 1
+            || request.resource.data.upvotes == resource.data.upvotes - 1);
 
       // Moderator can delete (set status = deleted) or archive (set status = archived)
       allow update: if isModerator()
