@@ -96,7 +96,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: border-color 0.15s;
-  resize: vertical;
+  resize: none;
 }
 
 .post-form__field input:focus,

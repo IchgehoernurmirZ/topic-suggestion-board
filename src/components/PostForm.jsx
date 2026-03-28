@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 
 const MAX_CHARS = 1000
@@ -14,13 +14,32 @@ export default function PostForm() {
   async function handleSubmit(e) {
     e.preventDefault()
     const trimmedContent = content.trim()
-    if (!trimmedContent) return
+
+    if (!trimmedContent) {
+      setError('话题内容不能为空')
+      return
+    }
+
+    if (!window.confirm('确认提交这个话题吗？')) return
 
     setSubmitting(true)
     setError('')
     setSuccess(false)
 
     try {
+      // Duplicate check: case-insensitive client-side comparison against non-deleted posts
+      const snapshot = await getDocs(
+        query(collection(db, 'posts'), where('status', '!=', 'deleted'))
+      )
+      const isDuplicate = snapshot.docs.some(
+        (doc) => doc.data().content.trim().toLowerCase() === trimmedContent.toLowerCase()
+      )
+      if (isDuplicate) {
+        setError('该话题已存在')
+        setSubmitting(false)
+        return
+      }
+
       await addDoc(collection(db, 'posts'), {
         content: trimmedContent,
         nickname: nickname.trim() || '匿名uu',
