@@ -3,7 +3,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Moderator check: UID must exist in the users collection
+    // Moderator check: document ID in the users collection MUST equal the Auth UID.
+    // To add a moderator: Firebase console → Firestore → users → Add document,
+    // set the Document ID to the user's Auth UID (not auto-ID).
     function isModerator() {
       return request.auth != null &&
         exists(/databases/$(database)/documents/users/$(request.auth.uid));
