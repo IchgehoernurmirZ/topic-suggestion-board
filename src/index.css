@@ -262,6 +262,11 @@ body {
   opacity: 1;
 }
 
+.post-card__action-error {
+  font-size: 0.8rem;
+  color: #ef4444;
+}
+
 .post-card__actions {
   display: flex;
   align-items: center;

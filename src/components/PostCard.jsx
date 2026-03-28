@@ -11,6 +11,7 @@ export default function PostCard({ post, isModerator }) {
   const [voting, setVoting] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [archiving, setArchiving] = useState(false)
+  const [actionError, setActionError] = useState('')
 
   const sessionId = getSessionId()
   const hasVoted = upvotedBy?.includes(sessionId)
@@ -41,6 +42,7 @@ export default function PostCard({ post, isModerator }) {
   async function handleArchive() {
     if (!window.confirm('将此话题标记为"已选入本期"吗？')) return
     setArchiving(true)
+    setActionError('')
     try {
       await updateDoc(doc(db, 'posts', id), {
         status: 'archived',
@@ -48,6 +50,7 @@ export default function PostCard({ post, isModerator }) {
       })
     } catch (err) {
       console.error('archive failed', err)
+      setActionError('操作失败，请检查权限')
       setArchiving(false)
     }
   }
@@ -55,6 +58,7 @@ export default function PostCard({ post, isModerator }) {
   async function handleDelete() {
     if (!window.confirm('确认删除这个话题吗？')) return
     setDeleting(true)
+    setActionError('')
     try {
       await updateDoc(doc(db, 'posts', id), {
         status: 'deleted',
@@ -62,6 +66,7 @@ export default function PostCard({ post, isModerator }) {
       })
     } catch (err) {
       console.error('delete failed', err)
+      setActionError('删除失败，请检查权限')
       setDeleting(false)
     }
   }
@@ -75,6 +80,8 @@ export default function PostCard({ post, isModerator }) {
           {expanded ? '收起' : '展开阅读'}
         </button>
       )}
+
+      {actionError && <p className="post-card__action-error">{actionError}</p>}
 
       <footer className="post-card__footer">
         <span className="post-card__meta">
