@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
+import Home from './pages/Home'
 
 function PrivateRoute({ children }) {
   const user = useAuth()
@@ -9,10 +10,6 @@ function PrivateRoute({ children }) {
 }
 
 // Placeholder pages — replaced in subsequent steps
-function Home() {
-  return <p style={{ padding: 24 }}>话题征集板 — Firebase connected ✓</p>
-}
-
 function ModLogin() {
   return <p style={{ padding: 24 }}>Moderator login — coming soon</p>
 }

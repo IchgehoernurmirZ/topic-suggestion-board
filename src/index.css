@@ -17,3 +17,112 @@ body {
   margin: 0 auto;
   padding: 24px 16px;
 }
+
+/* ── Header ── */
+.app-header {
+  margin-bottom: 32px;
+}
+
+.app-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.app-header__sub {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.btn--primary:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+/* ── PostForm ── */
+.post-form {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 40px;
+}
+
+.post-form__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.post-form__field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.post-form__field label {
+  font-size: 0.875rem;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.post-form__field input,
+.post-form__field textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+
+.post-form__field input:focus,
+.post-form__field textarea:focus {
+  border-color: #4f46e5;
+}
+
+.post-form__counter {
+  align-self: flex-end;
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 4px;
+}
+
+.post-form__counter--warn {
+  color: #e55353;
+}
+
+.post-form__error {
+  color: #e55353;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+}
+
+.post-form__success {
+  color: #16a34a;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+}
