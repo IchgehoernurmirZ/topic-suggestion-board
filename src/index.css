@@ -90,22 +90,67 @@ body {
   gap: 8px;
 }
 
-/* ── Theme toggle ── */
+/* ── Theme toggle (iOS-style pill) ── */
 .theme-toggle {
-  background: none;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 1.1rem;
-  line-height: 1;
+  position: relative;
+  width: 56px;
+  height: 28px;
+  border-radius: 14px;
+  border: none;
+  background: #e2e8f0;
   cursor: pointer;
+  padding: 0;
   flex-shrink: 0;
-  transition: border-color 0.15s;
+  transition: background 0.3s ease;
 }
 
-.theme-toggle:hover {
-  border-color: var(--primary);
+.theme-toggle--dark {
+  background: #0f172a;
 }
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease;
+  /* default = light mode: thumb sits on the right */
+  transform: translateX(28px);
+}
+
+.theme-toggle--dark .theme-toggle__thumb {
+  transform: translateX(0);
+}
+
+.theme-toggle__icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+/* 🌙 on the left — visible in light mode (thumb is right), hidden in dark mode (thumb covers it) */
+.theme-toggle__icon--moon {
+  left: 6px;
+  opacity: 1;
+}
+
+/* ☀️ on the right — hidden in light mode (thumb covers it), visible in dark mode (thumb is left) */
+.theme-toggle__icon--sun {
+  right: 6px;
+  opacity: 0;
+}
+
+.theme-toggle--dark .theme-toggle__icon--moon { opacity: 0; }
+.theme-toggle--dark .theme-toggle__icon--sun  { opacity: 1; }
 
 /* ── ModLogin ── */
 .mod-login {
