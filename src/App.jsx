@@ -1,21 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
 import Home from './pages/Home'
+import ModLogin from './pages/ModLogin'
+import ModDashboard from './pages/ModDashboard'
 
 function PrivateRoute({ children }) {
   const user = useAuth()
   if (user === undefined) return null // auth state loading
   if (!user) return <Navigate to="/mod/login" replace />
   return children
-}
-
-// Placeholder pages — replaced in subsequent steps
-function ModLogin() {
-  return <p style={{ padding: 24 }}>Moderator login — coming soon</p>
-}
-
-function ModDashboard() {
-  return <p style={{ padding: 24 }}>Moderator dashboard — coming soon</p>
 }
 
 export default function App() {

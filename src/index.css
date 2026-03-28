@@ -34,6 +34,37 @@ body {
   font-size: 0.95rem;
 }
 
+.mod-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── ModLogin ── */
+.mod-login {
+  display: flex;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.mod-login__form {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mod-login__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
 /* ── Buttons ── */
 .btn {
   display: inline-block;
@@ -58,6 +89,17 @@ body {
 
 .btn--primary:not(:disabled):hover {
   opacity: 0.88;
+}
+
+.btn--secondary {
+  background: none;
+  border: 1px solid #d1d5db;
+  color: #555;
+}
+
+.btn--secondary:hover {
+  border-color: #999;
+  color: #333;
 }
 
 /* ── PostForm ── */
