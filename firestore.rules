@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Moderator check: UID must exist in the users collection
+    function isModerator() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    match /posts/{postId} {
+      // Anyone can read active or archived posts
+      allow read: if resource.data.status != 'deleted';
+
+      // Anyone can create a post (anonymous submission)
+      allow create: if request.resource.data.keys().hasAll(['content', 'nickname', 'createdAt', 'upvotes', 'upvotedBy', 'status'])
+        && request.resource.data.content is string
+        && request.resource.data.content.size() <= 1000
+        && request.resource.data.nickname is string
+        && request.resource.data.upvotes == 0
+        && request.resource.data.upvotedBy == []
+        && request.resource.data.status == 'active';
+
+      // Anyone can upvote (only upvotes and upvotedBy fields may change)
+      allow update: if !isModerator()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvotes', 'upvotedBy'])
+        && request.resource.data.upvotes == resource.data.upvotes + 1;
+
+      // Moderator can delete (set status = deleted) or archive (set status = archived)
+      allow update: if isModerator()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'deletedAt'])
+        && request.resource.data.status == 'deleted';
+
+      allow update: if isModerator()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'archivedAt'])
+        && request.resource.data.status == 'archived';
+
+      // No hard deletes
+      allow delete: if false;
+    }
+
+    // users collection: moderator UID registry
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false; // managed via Firebase console only
+    }
+  }
+}
