@@ -58,10 +58,10 @@ export default function ModDashboard() {
           <p className="app-header__sub">{user?.email}</p>
         </div>
         <div className="mod-header__actions">
-          <ThemeToggle />
           <button onClick={handleSignOut} className="btn btn--secondary">
             退出登录
           </button>
+          <ThemeToggle />
         </div>
       </header>
 
