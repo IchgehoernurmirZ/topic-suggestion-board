@@ -1,36 +1,35 @@
 import { useState, useEffect } from 'react'
 import { useAnnouncement } from '../hooks/useAnnouncement'
 
-const STORAGE_KEY = 'tsb_announcement_dismissed'
+const STORAGE_KEY = 'tsb_announcement_collapsed'
 
 export default function AnnouncementBanner() {
   const { announcement, loading } = useAnnouncement()
-  const [dismissed, setDismissed] = useState(false)
+  const [collapsed, setCollapsed] = useState(() => localStorage.getItem(STORAGE_KEY) === 'true')
 
-  // When announcement text changes, clear any prior dismissal for the old text
-  useEffect(() => {
-    if (!announcement?.text) return
-    const dismissedText = localStorage.getItem(STORAGE_KEY)
-    setDismissed(dismissedText === announcement.text)
-  }, [announcement?.text])
-
-  function handleDismiss() {
-    localStorage.setItem(STORAGE_KEY, announcement.text)
-    setDismissed(true)
+  function toggle() {
+    setCollapsed((v) => {
+      const next = !v
+      localStorage.setItem(STORAGE_KEY, next)
+      return next
+    })
   }
 
-  if (loading || !announcement?.enabled || !announcement?.text || dismissed) return null
+  if (loading || !announcement?.enabled || !announcement?.text) return null
+
+  const preview = announcement.text.length > 20
+    ? announcement.text.slice(0, 20).trimEnd() + '…'
+    : announcement.text
 
   return (
     <div className="announcement-banner">
-      <span className="announcement-banner__text">📣 {announcement.text}</span>
-      <button
-        className="announcement-banner__dismiss"
-        onClick={handleDismiss}
-        aria-label="关闭公告"
-      >
-        ✕
+      <button className="announcement-banner__header" onClick={toggle} aria-expanded={!collapsed}>
+        <span>📣 {preview}</span>
+        <span className="announcement-banner__chevron">{collapsed ? '▼' : '▲'}</span>
       </button>
+      {!collapsed && (
+        <p className="announcement-banner__body">{announcement.text}</p>
+      )}
     </div>
   )
 }
