@@ -650,23 +650,6 @@ input[type='number']::-webkit-inner-spin-button {
   gap: 12px;
 }
 
-.announcement-settings__toggle-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  user-select: none;
-}
-
-.announcement-settings__toggle-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--primary);
-  cursor: pointer;
-}
-
 .announcement-settings__save-row {
   display: flex;
   align-items: center;

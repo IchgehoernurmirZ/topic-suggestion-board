@@ -15,7 +15,7 @@ export default function AnnouncementBanner() {
     })
   }
 
-  if (loading || !announcement?.enabled || !announcement?.text) return null
+  if (loading || !announcement?.text) return null
 
   const preview = announcement.text.length > 20
     ? announcement.text.slice(0, 20).trimEnd() + '…'

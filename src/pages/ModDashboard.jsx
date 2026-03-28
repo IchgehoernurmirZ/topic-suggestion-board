@@ -16,7 +16,6 @@ export default function ModDashboard() {
 
   const { announcement } = useAnnouncement()
   const [announcementText, setAnnouncementText] = useState('')
-  const [announcementEnabled, setAnnouncementEnabled] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveMsg, setSaveMsg] = useState('')
 
@@ -24,7 +23,6 @@ export default function ModDashboard() {
   const [synced, setSynced] = useState(false)
   if (announcement !== null && !synced) {
     setAnnouncementText(announcement?.text ?? '')
-    setAnnouncementEnabled(announcement?.enabled ?? false)
     setSynced(true)
   }
 
@@ -34,7 +32,6 @@ export default function ModDashboard() {
     try {
       await setDoc(doc(db, 'config', 'announcement'), {
         text: announcementText,
-        enabled: announcementEnabled,
       })
       setSaveMsg('已保存')
       setTimeout(() => setSaveMsg(''), 2000)
@@ -76,14 +73,6 @@ export default function ModDashboard() {
             rows={2}
           />
           <div className="announcement-settings__row">
-            <label className="announcement-settings__toggle-label">
-              <input
-                type="checkbox"
-                checked={announcementEnabled}
-                onChange={(e) => setAnnouncementEnabled(e.target.checked)}
-              />
-              显示公告
-            </label>
             <div className="announcement-settings__save-row">
               {saveMsg && <span className="announcement-settings__save-msg">{saveMsg}</span>}
               <button
