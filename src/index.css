@@ -157,6 +157,12 @@ body {
   color: #e55353;
 }
 
+.post-form__field-error {
+  font-size: 0.8rem;
+  color: #e55353;
+  margin-top: 4px;
+}
+
 .post-form__error {
   color: #e55353;
   font-size: 0.875rem;

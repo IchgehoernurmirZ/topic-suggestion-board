@@ -33,7 +33,7 @@ export default function ModLogin() {
   return (
     <main className="mod-login">
       <form onSubmit={handleSubmit} className="mod-login__form">
-        <h1 className="mod-login__title">管理员登录</h1>
+        <h1 className="mod-login__title">🔐 管理员登录</h1>
 
         <div className="post-form__field">
           <label htmlFor="email">邮箱</label>
