@@ -333,6 +333,28 @@ input[type='number']::-webkit-inner-spin-button {
   margin-bottom: 12px;
 }
 
+/* ── New post button ── */
+.btn-new-post {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 40px;
+  padding: 10px 20px;
+  border: 1.5px dashed var(--border-subtle);
+  border-radius: 10px;
+  background: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-new-post:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
 /* ── Feed ── */
 .feed__title {
   font-size: 1rem;

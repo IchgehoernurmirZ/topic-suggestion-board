@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import PostForm from '../components/PostForm'
 import PostCard from '../components/PostCard'
 import ThemeToggle from '../components/ThemeToggle'
 import { usePosts } from '../hooks/usePosts'
 
 export default function Home() {
+  const [showForm, setShowForm] = useState(true)
   const { posts, loading, error } = usePosts('active')
   const { posts: archived, loading: archivedLoading } = usePosts('archived')
 
@@ -12,12 +14,19 @@ export default function Home() {
       <header className="app-header">
         <div>
           <h1>💬 话题征集板</h1>
-          <p className="app-header__sub">匿名提交你想在活动中探讨的话题</p>
+          <p className="app-header__sub">提交你想在下次活动中探讨的话题</p>
         </div>
         <ThemeToggle />
       </header>
 
-      <PostForm />
+      {showForm
+        ? <PostForm onSuccess={() => setShowForm(false)} />
+        : (
+          <button className="btn-new-post" onClick={() => setShowForm(true)}>
+            + 提交新话题
+          </button>
+        )
+      }
 
       <section className="feed">
         <h2 className="feed__title">🔥 当前话题 {!loading && `· ${posts.length}`}</h2>

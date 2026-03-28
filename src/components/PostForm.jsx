@@ -14,7 +14,7 @@ function validateNickname(value) {
   return ''
 }
 
-export default function PostForm() {
+export default function PostForm({ onSuccess }) {
   const [nickname, setNickname] = useState('')
   const [nicknameError, setNicknameError] = useState('')
   const [content, setContent] = useState('')
@@ -27,7 +27,8 @@ export default function PostForm() {
 
   function validateDuration(value) {
     const n = Number(value)
-    if (!Number.isInteger(n) || n < 1 || n > 15) return '时长请在 1-20 分钟之间'
+    if (!Number.isInteger(n)) return '请输入整数分钟数'
+    if (n < 1 || n > 20) return '时长请在 1-20 分钟之间（整数）'
     return ''
   }
 
@@ -103,6 +104,7 @@ export default function PostForm() {
       setDurationError('')
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
+      onSuccess?.()
     } catch (err) {
       setError('提交失败，请稍后重试')
       console.error(err)
@@ -186,7 +188,8 @@ export default function PostForm() {
               setDurationError(validateDuration(e.target.value))
             }}
             min={1}
-            max={15}
+            max={20}
+            step={1}
             disabled={submitting}
           />
           {durationError && <span className="post-form__field-error">{durationError}</span>}
