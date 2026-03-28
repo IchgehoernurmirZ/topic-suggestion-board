@@ -60,5 +60,11 @@ service cloud.firestore {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow write: if false; // managed via Firebase console only
     }
+
+    // config collection: public read, moderator write
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if isModerator();
+    }
   }
 }

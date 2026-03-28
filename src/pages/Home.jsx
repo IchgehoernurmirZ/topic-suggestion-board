@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PostForm from '../components/PostForm'
 import PostCard from '../components/PostCard'
 import ThemeToggle from '../components/ThemeToggle'
+import AnnouncementBanner from '../components/AnnouncementBanner'
 import { usePosts } from '../hooks/usePosts'
 
 export default function Home() {
@@ -19,6 +20,8 @@ export default function Home() {
         </div>
         <ThemeToggle />
       </header>
+
+      <AnnouncementBanner />
 
       {!selectedLoading && selected.length > 0 && (
         <section className="feed feed--selected">

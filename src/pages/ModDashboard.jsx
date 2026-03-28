@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { signOut } from 'firebase/auth'
-import { auth } from '../lib/firebase'
+import { doc, setDoc } from 'firebase/firestore'
+import { auth, db } from '../lib/firebase'
 import { useAuth } from '../hooks/useAuth'
 import { usePosts } from '../hooks/usePosts'
+import { useAnnouncement } from '../hooks/useAnnouncement'
 import PostCard from '../components/PostCard'
 import ThemeToggle from '../components/ThemeToggle'
 
@@ -10,6 +13,38 @@ export default function ModDashboard() {
   const { posts: selected, loading: selectedLoading } = usePosts('selected')
   const { posts, loading, error } = usePosts('active')
   const { posts: archived, loading: archivedLoading } = usePosts('archived')
+
+  const { announcement } = useAnnouncement()
+  const [announcementText, setAnnouncementText] = useState('')
+  const [announcementEnabled, setAnnouncementEnabled] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [saveMsg, setSaveMsg] = useState('')
+
+  // Sync local state when Firestore data arrives (only on first load)
+  const [synced, setSynced] = useState(false)
+  if (announcement !== null && !synced) {
+    setAnnouncementText(announcement?.text ?? '')
+    setAnnouncementEnabled(announcement?.enabled ?? false)
+    setSynced(true)
+  }
+
+  async function handleSave() {
+    setSaving(true)
+    setSaveMsg('')
+    try {
+      await setDoc(doc(db, 'config', 'announcement'), {
+        text: announcementText,
+        enabled: announcementEnabled,
+      })
+      setSaveMsg('已保存')
+      setTimeout(() => setSaveMsg(''), 2000)
+    } catch (err) {
+      console.error('save announcement failed', err)
+      setSaveMsg('保存失败')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   async function handleSignOut() {
     await signOut(auth)
@@ -29,6 +64,39 @@ export default function ModDashboard() {
           </button>
         </div>
       </header>
+
+      <section className="announcement-settings">
+        <h2 className="feed__title">📣 公告设置</h2>
+        <div className="announcement-settings__body">
+          <textarea
+            className="announcement-settings__input"
+            value={announcementText}
+            onChange={(e) => setAnnouncementText(e.target.value)}
+            placeholder="输入公告内容…"
+            rows={2}
+          />
+          <div className="announcement-settings__row">
+            <label className="announcement-settings__toggle-label">
+              <input
+                type="checkbox"
+                checked={announcementEnabled}
+                onChange={(e) => setAnnouncementEnabled(e.target.checked)}
+              />
+              显示公告
+            </label>
+            <div className="announcement-settings__save-row">
+              {saveMsg && <span className="announcement-settings__save-msg">{saveMsg}</span>}
+              <button
+                className="btn btn--primary"
+                onClick={handleSave}
+                disabled={saving}
+              >
+                {saving ? '保存中…' : '保存'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {!selectedLoading && selected.length > 0 && (
         <section className="feed feed--selected">
