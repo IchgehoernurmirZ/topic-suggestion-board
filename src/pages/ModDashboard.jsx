@@ -3,6 +3,7 @@ import { auth } from '../lib/firebase'
 import { useAuth } from '../hooks/useAuth'
 import { usePosts } from '../hooks/usePosts'
 import PostCard from '../components/PostCard'
+import ThemeToggle from '../components/ThemeToggle'
 
 export default function ModDashboard() {
   const user = useAuth()
@@ -20,9 +21,12 @@ export default function ModDashboard() {
           <h1>⚙️ 话题管理</h1>
           <p className="app-header__sub">{user?.email}</p>
         </div>
-        <button onClick={handleSignOut} className="btn btn--secondary">
-          退出登录
-        </button>
+        <div className="mod-header__actions">
+          <ThemeToggle />
+          <button onClick={handleSignOut} className="btn btn--secondary">
+            退出登录
+          </button>
+        </div>
       </header>
 
       <section className="feed">

@@ -1,3 +1,45 @@
+/* ── Theme variables ── */
+:root {
+  --bg:              #f5f5f5;
+  --surface:         #ffffff;
+  --text:            #1a1a1a;
+  --text-secondary:  #444444;
+  --text-muted:      #888888;
+  --text-faint:      #999999;
+  --border:          #dddddd;
+  --border-subtle:   #d1d5db;
+  --border-section:  #e5e7eb;
+  --primary:         #4f46e5;
+  --shadow:          rgba(0, 0, 0, 0.08);
+  --error:           #e55353;
+  --error-border:    #fca5a5;
+  --error-bg:        #fef2f2;
+  --success:         #16a34a;
+  --success-border:  #86efac;
+  --success-bg:      #f0fdf4;
+}
+
+[data-theme="dark"] {
+  --bg:              #111827;
+  --surface:         #1f2937;
+  --text:            #f9fafb;
+  --text-secondary:  #d1d5db;
+  --text-muted:      #9ca3af;
+  --text-faint:      #6b7280;
+  --border:          #374151;
+  --border-subtle:   #374151;
+  --border-section:  #374151;
+  --primary:         #818cf8;
+  --shadow:          rgba(0, 0, 0, 0.3);
+  --error:           #f87171;
+  --error-border:    #7f1d1d;
+  --error-bg:        #1c0a0a;
+  --success:         #4ade80;
+  --success-border:  #14532d;
+  --success-bg:      #052e16;
+}
+
+/* ── Reset ── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -7,9 +49,10 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
     'Microsoft YaHei', sans-serif;
-  background: #f5f5f5;
-  color: #1a1a1a;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 #root {
@@ -20,6 +63,9 @@ body {
 
 /* ── Header ── */
 .app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   margin-bottom: 32px;
 }
 
@@ -30,14 +76,35 @@ body {
 }
 
 .app-header__sub {
-  color: #666;
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
 .mod-header {
+  align-items: center;
+}
+
+.mod-header__actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--primary);
 }
 
 /* ── ModLogin ── */
@@ -48,15 +115,16 @@ body {
 }
 
 .mod-login__form {
-  background: #fff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 32px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px var(--shadow);
   width: 100%;
   max-width: 360px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  transition: background-color 0.2s;
 }
 
 .mod-login__title {
@@ -83,7 +151,7 @@ body {
 }
 
 .btn--primary {
-  background: #4f46e5;
+  background: var(--primary);
   color: #fff;
 }
 
@@ -93,22 +161,22 @@ body {
 
 .btn--secondary {
   background: none;
-  border: 1px solid #d1d5db;
-  color: #555;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
 }
 
 .btn--secondary:hover {
-  border-color: #999;
-  color: #333;
+  border-color: var(--text-muted);
 }
 
 /* ── PostForm ── */
 .post-form {
-  background: #fff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px var(--shadow);
   margin-bottom: 40px;
+  transition: background-color 0.2s;
 }
 
 .post-form__title {
@@ -125,7 +193,7 @@ body {
 
 .post-form__field label {
   font-size: 0.875rem;
-  color: #444;
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
@@ -134,43 +202,45 @@ body {
   font-family: inherit;
   font-size: 1rem;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
-  transition: border-color 0.15s;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.15s, background-color 0.2s, color 0.2s;
   resize: none;
 }
 
 .post-form__field input:focus,
 .post-form__field textarea:focus {
-  border-color: #4f46e5;
+  border-color: var(--primary);
 }
 
 .post-form__counter {
   align-self: flex-end;
   font-size: 0.8rem;
-  color: #999;
+  color: var(--text-faint);
   margin-top: 4px;
 }
 
 .post-form__counter--warn {
-  color: #e55353;
+  color: var(--error);
 }
 
 .post-form__field-error {
   font-size: 0.8rem;
-  color: #e55353;
+  color: var(--error);
   margin-top: 4px;
 }
 
 .post-form__error {
-  color: #e55353;
+  color: var(--error);
   font-size: 0.875rem;
   margin-bottom: 12px;
 }
 
 .post-form__success {
-  color: #16a34a;
+  color: var(--success);
   font-size: 0.875rem;
   margin-bottom: 12px;
 }
@@ -179,24 +249,24 @@ body {
 .feed__title {
   font-size: 1rem;
   font-weight: 600;
-  color: #444;
+  color: var(--text-secondary);
   margin-bottom: 16px;
 }
 
 .feed__state {
-  color: #888;
+  color: var(--text-muted);
   font-size: 0.95rem;
   padding: 24px 0;
 }
 
 .feed__state--error {
-  color: #e55353;
+  color: var(--error);
 }
 
 .feed--archived {
   margin-top: 48px;
   padding-top: 32px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-section);
   opacity: 0.75;
 }
 
@@ -208,19 +278,20 @@ body {
 
 /* ── PostCard ── */
 .post-card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px var(--shadow);
   display: flex;
   flex-direction: column;
   gap: 16px;
+  transition: background-color 0.2s;
 }
 
 .post-card__content {
   font-size: 0.975rem;
   line-height: 1.65;
-  color: #1a1a1a;
+  color: var(--text);
   white-space: pre-wrap;
   word-break: break-word;
 }
@@ -234,7 +305,7 @@ body {
 
 .post-card__meta {
   font-size: 0.8rem;
-  color: #999;
+  color: var(--text-faint);
 }
 
 .post-card__upvote-btn {
@@ -242,25 +313,25 @@ body {
   align-items: center;
   gap: 5px;
   background: none;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-subtle);
   border-radius: 6px;
   padding: 4px 10px;
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #555;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
 }
 
 .post-card__upvote-btn:not(:disabled):hover {
-  border-color: #4f46e5;
-  color: #4f46e5;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .post-card__upvote-btn--voted {
-  border-color: #4f46e5;
-  color: #4f46e5;
+  border-color: var(--primary);
+  color: var(--primary);
   cursor: default;
 }
 
@@ -270,7 +341,7 @@ body {
 
 .post-card__action-error {
   font-size: 0.8rem;
-  color: #ef4444;
+  color: var(--error);
 }
 
 .post-card__actions {
@@ -281,18 +352,18 @@ body {
 
 .post-card__archive-btn {
   background: none;
-  border: 1px solid #86efac;
+  border: 1px solid var(--success-border);
   border-radius: 6px;
   padding: 4px 10px;
   font-family: inherit;
   font-size: 0.875rem;
-  color: #16a34a;
+  color: var(--success);
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .post-card__archive-btn:not(:disabled):hover {
-  background: #f0fdf4;
+  background: var(--success-bg);
 }
 
 .post-card__archive-btn:disabled {
@@ -302,18 +373,18 @@ body {
 
 .post-card__delete-btn {
   background: none;
-  border: 1px solid #fca5a5;
+  border: 1px solid var(--error-border);
   border-radius: 6px;
   padding: 4px 10px;
   font-family: inherit;
   font-size: 0.875rem;
-  color: #ef4444;
+  color: var(--error);
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .post-card__delete-btn:not(:disabled):hover {
-  background: #fef2f2;
+  background: var(--error-bg);
 }
 
 .post-card__delete-btn:disabled {
@@ -327,7 +398,7 @@ body {
   padding: 0;
   font-family: inherit;
   font-size: 0.85rem;
-  color: #4f46e5;
+  color: var(--primary);
   cursor: pointer;
   align-self: flex-start;
 }
