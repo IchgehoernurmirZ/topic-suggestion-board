@@ -24,9 +24,10 @@ service cloud.firestore {
         && request.resource.data.upvotedBy == []
         && request.resource.data.status == 'active';
 
-      // Anyone can upvote or un-upvote (only upvotes and upvotedBy fields may change)
-      allow update: if !isModerator()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvotes', 'upvotedBy'])
+      // Anyone (including unauthenticated) can upvote or un-upvote.
+      // No auth check here — field constraints are the only gate needed:
+      // only upvotes and upvotedBy may change, and the count must move by exactly ±1.
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvotes', 'upvotedBy'])
         && (request.resource.data.upvotes == resource.data.upvotes + 1
             || request.resource.data.upvotes == resource.data.upvotes - 1);
 
