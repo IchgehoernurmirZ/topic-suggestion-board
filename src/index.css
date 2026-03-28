@@ -182,17 +182,35 @@ body {
   color: #999;
 }
 
-.post-card__upvotes {
+.post-card__upvote-btn {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: inherit;
   font-size: 0.875rem;
   font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.post-card__upvote-btn:not(:disabled):hover {
+  border-color: #4f46e5;
   color: #4f46e5;
 }
 
-.post-card__upvote-icon {
-  font-size: 0.75rem;
+.post-card__upvote-btn--voted {
+  border-color: #4f46e5;
+  color: #4f46e5;
+  cursor: default;
+}
+
+.post-card__upvote-btn:disabled {
+  opacity: 1;
 }
 
 .post-card__toggle {

@@ -1,10 +1,17 @@
 import { useState } from 'react'
+import { doc, updateDoc, increment, arrayUnion } from 'firebase/firestore'
+import { db } from '../lib/firebase'
+import { getSessionId } from '../lib/session'
 
 const TRUNCATE_AT = 150
 
 export default function PostCard({ post }) {
-  const { nickname, content, upvotes, createdAt } = post
+  const { id, nickname, content, upvotes, upvotedBy, createdAt } = post
   const [expanded, setExpanded] = useState(false)
+  const [voting, setVoting] = useState(false)
+
+  const sessionId = getSessionId()
+  const hasVoted = upvotedBy?.includes(sessionId)
 
   const isLong = content.length > TRUNCATE_AT
   const displayContent = isLong && !expanded ? content.slice(0, TRUNCATE_AT).trimEnd() + '…' : content
@@ -14,15 +21,27 @@ export default function PostCard({ post }) {
     day: 'numeric',
   })
 
+  async function handleUpvote() {
+    if (hasVoted || voting) return
+    setVoting(true)
+    try {
+      await updateDoc(doc(db, 'posts', id), {
+        upvotes: increment(1),
+        upvotedBy: arrayUnion(sessionId),
+      })
+    } catch (err) {
+      console.error('upvote failed', err)
+    } finally {
+      setVoting(false)
+    }
+  }
+
   return (
     <article className="post-card">
       <p className="post-card__content">{displayContent}</p>
 
       {isLong && (
-        <button
-          className="post-card__toggle"
-          onClick={() => setExpanded((v) => !v)}
-        >
+        <button className="post-card__toggle" onClick={() => setExpanded((v) => !v)}>
           {expanded ? '收起' : '展开阅读'}
         </button>
       )}
@@ -31,10 +50,14 @@ export default function PostCard({ post }) {
         <span className="post-card__meta">
           {nickname} · {date ?? '…'}
         </span>
-        <span className="post-card__upvotes">
-          <span className="post-card__upvote-icon">▲</span>
-          {upvotes}
-        </span>
+        <button
+          className={`post-card__upvote-btn ${hasVoted ? 'post-card__upvote-btn--voted' : ''}`}
+          onClick={handleUpvote}
+          disabled={hasVoted || voting}
+          aria-label="upvote"
+        >
+          ▲ {upvotes}
+        </button>
       </footer>
     </article>
   )
