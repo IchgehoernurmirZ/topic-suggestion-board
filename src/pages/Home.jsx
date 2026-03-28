@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import PostForm from '../components/PostForm'
 import PostCard from '../components/PostCard'
 import ThemeToggle from '../components/ThemeToggle'
@@ -7,6 +7,17 @@ import { usePosts } from '../hooks/usePosts'
 
 export default function Home() {
   const [showForm, setShowForm] = useState(true)
+  const [selectedCollapsed, setSelectedCollapsed] = useState(
+    () => localStorage.getItem('tsb_selected_collapsed') !== 'false'
+  )
+
+  const toggleSelected = useCallback(() => {
+    setSelectedCollapsed((v) => {
+      const next = !v
+      localStorage.setItem('tsb_selected_collapsed', next)
+      return next
+    })
+  }, [])
   const { posts: selected, loading: selectedLoading } = usePosts('selected')
   const { posts, loading, error } = usePosts('active')
   const { posts: archived, loading: archivedLoading } = usePosts('archived')
@@ -25,12 +36,17 @@ export default function Home() {
 
       {!selectedLoading && selected.length > 0 && (
         <section className="feed feed--selected">
-          <h2 className="feed__title">🎉 本期话题 · {selected.length}</h2>
-          <div className="post-grid">
-            {selected.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
+          <button className="feed__collapsible-header" onClick={toggleSelected} aria-expanded={!selectedCollapsed}>
+            🎉 本期话题 · {selected.length}
+            <span className="feed__chevron">{selectedCollapsed ? '▼' : '▲'}</span>
+          </button>
+          {!selectedCollapsed && (
+            <div className="post-grid">
+              {selected.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
+            </div>
+          )}
         </section>
       )}
 
