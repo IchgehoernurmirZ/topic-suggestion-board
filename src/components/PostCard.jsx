@@ -132,45 +132,49 @@ export default function PostCard({ post, isModerator }) {
         <div className="post-card__actions">
           {isModerator && post.status === 'active' && (
             <button
-              className="post-card__select-btn"
+              className="post-card__icon-btn post-card__icon-btn--select"
               onClick={handleSelect}
               disabled={selecting}
+              title="选入本期"
               aria-label="选入本期"
             >
-              {selecting ? '…' : '选入本期'}
+              {selecting ? '…' : '📌'}
             </button>
           )}
           {isModerator && post.status === 'selected' && (
             <button
-              className="post-card__unselect-btn"
+              className="post-card__icon-btn post-card__icon-btn--unselect"
               onClick={handleUnselect}
               disabled={selecting}
+              title="取消选中"
               aria-label="取消选中"
             >
-              {selecting ? '…' : '取消选中'}
+              {selecting ? '…' : '🔖'}
             </button>
           )}
-          {isModerator && post.status === 'active' && (
+          {isModerator && (post.status === 'active' || post.status === 'selected') && (
             <button
-              className="post-card__archive-btn"
+              className="post-card__icon-btn post-card__icon-btn--archive"
               onClick={handleArchive}
               disabled={archiving}
-              aria-label="标记为已选入本期"
+              title="归档"
+              aria-label="归档"
             >
-              {archiving ? '…' : '已选入本期'}
+              {archiving ? '…' : '🗄️'}
             </button>
           )}
           {isModerator && (
             <button
-              className="post-card__delete-btn"
+              className="post-card__icon-btn post-card__icon-btn--delete"
               onClick={handleDelete}
               disabled={deleting}
+              title="删除"
               aria-label="删除"
             >
-              {deleting ? '…' : '删除'}
+              {deleting ? '…' : '🗑️'}
             </button>
           )}
-          {post.status === 'active' && (
+          {!isModerator && post.status === 'active' && (
             <button
               className={`post-card__upvote-btn ${hasVoted ? 'post-card__upvote-btn--voted' : ''}`}
               onClick={handleUpvote}

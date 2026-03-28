@@ -489,95 +489,52 @@ input[type='number']::-webkit-inner-spin-button {
   gap: 8px;
 }
 
-.post-card__select-btn {
-  background: none;
-  border: 1px solid #fcd34d;
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  color: #b45309;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.post-card__select-btn:not(:disabled):hover {
-  background: rgba(234, 179, 8, 0.1);
-}
-
-.post-card__select-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.post-card__unselect-btn {
-  background: none;
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-
-.post-card__unselect-btn:not(:disabled):hover {
-  border-color: var(--text-secondary);
-  color: var(--text-secondary);
-}
-
-.post-card__unselect-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .feed--selected {
   margin-bottom: 40px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--border-section);
 }
 
-.post-card__archive-btn {
-  background: none;
-  border: 1px solid var(--success-border);
+/* ── Moderator icon buttons ── */
+.post-card__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   border-radius: 6px;
-  padding: 4px 10px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  color: var(--success);
+  border: 1px solid var(--border-subtle);
+  background: none;
+  font-size: 15px;
+  line-height: 1;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 
-.post-card__archive-btn:not(:disabled):hover {
+.post-card__icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.post-card__icon-btn--select:not(:disabled):hover {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: #fcd34d;
+}
+
+.post-card__icon-btn--unselect:not(:disabled):hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: var(--primary);
+}
+
+.post-card__icon-btn--archive:not(:disabled):hover {
   background: var(--success-bg);
+  border-color: var(--success-border);
 }
 
-.post-card__archive-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.post-card__delete-btn {
-  background: none;
-  border: 1px solid var(--error-border);
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  color: var(--error);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.post-card__delete-btn:not(:disabled):hover {
+.post-card__icon-btn--delete:not(:disabled):hover {
   background: var(--error-bg);
-}
-
-.post-card__delete-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  border-color: var(--error-border);
 }
 
 .post-card__toggle {
