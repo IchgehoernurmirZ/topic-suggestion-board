@@ -8,7 +8,7 @@ import { usePosts } from '../hooks/usePosts'
 export default function Home() {
   const [showForm, setShowForm] = useState(true)
   const [selectedCollapsed, setSelectedCollapsed] = useState(
-    () => localStorage.getItem('tsb_selected_collapsed') !== 'false'
+    () => localStorage.getItem('tsb_selected_collapsed') === 'true'
   )
 
   const toggleSelected = useCallback(() => {
